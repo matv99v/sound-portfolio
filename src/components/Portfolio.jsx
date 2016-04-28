@@ -7,6 +7,9 @@ import getRatio    from '../utilities/getRatio.js';
 import ModalWindow from './ModalWindow.jsx';
 
 import Masonry     from 'react-masonry-component';
+
+import BluePromise from 'bluebird';
+
 import './Portfolio.less';
 
 

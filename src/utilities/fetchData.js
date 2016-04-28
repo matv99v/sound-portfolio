@@ -1,5 +1,8 @@
+import BluePromise from 'bluebird';
+
+
 export default function getData(URL) {
-    return new Promise((resolve, reject) => {
+    return new BluePromise((resolve, reject) => {
 
         const request = new XMLHttpRequest();
         request.open('GET', URL, true);
