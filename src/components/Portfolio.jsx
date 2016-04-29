@@ -1,23 +1,16 @@
 import React       from 'react';
-
+import Masonry     from 'react-masonry-component';
 import FadeLoader  from './FadeLoader.jsx';
 import SingleWork  from './SingleWork.jsx';
 import fetchData   from '../utilities/fetchData.js';
-import getRatio    from '../utilities/getRatio.js';
 import ModalWindow from './ModalWindow.jsx';
-
-import Masonry     from 'react-masonry-component';
-
-import BluePromise from 'bluebird';
-
+// import BluePromise from 'bluebird';
 import './Portfolio.less';
-
-
 
 export default class Portfolio extends React.Component {
     state = {
-        portfolio: null,
-        showModalId: null
+        portfolio: [],
+        modalVideoId: null
     };
 
     componentWillMount = () => {
@@ -30,64 +23,55 @@ export default class Portfolio extends React.Component {
                         name       : el.name,
                         description: el.description,
                         pictureUrl : el.pictures.sizes[2].link_with_play_button,
-                        videoId    : el.uri.match(/\d+$/)[0],
-                        aspectRatio: getRatio(el.width, el.height)
+                        videoId    : el.uri.match(/\d+$/)[0]
                     };
                 });
-                this.setState( {portfolio: arr} );
+                this.setState( {...this.state, portfolio: arr} );
             })
             .catch(e => console.error(e) );
     };
 
-    activateClickedEl = (videoId) => {
-        this.setState( {...this.state, showModalId: videoId} );
+    activateClickedEl = videoId => {
+        this.setState( {...this.state, modalVideoId: videoId} );
     };
 
-    disableClickedEl = (videoId) => {
-        this.setState( {...this.state, showModalId: null} );
+    disableClickedEl = videoId => {
+        this.setState( {...this.state, modalVideoId: null} );
+    };
+
+    getModalAttr = videoId => {
+        const clickedElement  = this.state.portfolio.find(el => el.videoId === this.state.modalVideoId);
+        return videoId ? {
+            videoId     : clickedElement.videoId,
+            name        : clickedElement.name,
+            description : clickedElement.description
+        } : {};
     };
 
     render() {
-        const modalAttr = {
-            name: null,
-            description: null
-        };
-
-        if (this.state.showModalId) {
-            const clickedElement  = this.state.portfolio.find(el => el.videoId === this.state.showModalId);
-            modalAttr.name        = clickedElement.name;
-            modalAttr.description = clickedElement.description;
-            modalAttr.aspectRatio = clickedElement.aspectRatio;
-        }
-
         return (
             <div>
-                <FadeLoader display={this.state.portfolio ? 'none' : ''}/>
+                <FadeLoader display={this.state.portfolio.length ? 'none' : ''}/>
+
                 <Masonry >
                     {
-                        this.state.portfolio
-                            ?
-                                this.state.portfolio.map((el, i) => {
-                                    return (
-                                        <SingleWork name        = {el.name}
-                                                    description = {el.description}
-                                                    pictureUrl  = {el.pictureUrl}
-                                                    videoId     = {el.videoId}
-                                                    aspectRatio = {el.aspectRatio}
-                                                    key         = {i}
-                                                    activateItem = {this.activateClickedEl.bind(this)}
-                                        />
-                                    );
-                                })
-                            :
-                                null
+                        this.state.portfolio.map((el, i) => {
+                            return (
+                                <SingleWork name        = {el.name}
+                                            description = {el.description}
+                                            pictureUrl  = {el.pictureUrl}
+                                            videoId     = {el.videoId}
+                                            aspectRatio = {el.aspectRatio}
+                                            key         = {i}
+                                            activateItem = {this.activateClickedEl.bind(this)}
+                                />
+                            );
+                        })
                     }
                 </Masonry>
 
-                <ModalWindow videoId     = {this.state.showModalId}
-                             disableItem = {this.disableClickedEl.bind(this)}
-                             {...modalAttr}
-
+                <ModalWindow disableItem = {this.disableClickedEl.bind(this)}
+                             {...this.getModalAttr(this.state.modalVideoId)}
                 />
             </div>
         );

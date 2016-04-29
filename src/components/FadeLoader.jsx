@@ -1,4 +1,4 @@
-import React from 'react';
+import React      from 'react';
 import SyncLoader from 'halogen/SyncLoader';
 import './FadeLoader.less';
 

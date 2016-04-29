@@ -1,10 +1,7 @@
-import React from 'react';
+import React     from 'react';
 import Thumbnail from 'react-bootstrap/lib/Thumbnail';
-import Button from 'react-bootstrap/lib/Button';
-import Col from 'react-bootstrap/lib/Col';
-import Row from 'react-bootstrap/lib/Row';
+import Col       from 'react-bootstrap/lib/Col';
 
-import path from 'path';
 import './SingleWork.less';
 
 export default class SingleWork extends React.Component {
