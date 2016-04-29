@@ -16,12 +16,24 @@ export default class ModalWindow extends React.Component {
         this.setState( {showModal: !!nextProps.videoId} );
     };
 
+    handleEnter = () => {
+    };
+
+    handleLoad = () => {
+        setTimeout( () => {
+            console.log(`loaded - ${this.props.name}`);
+        }, 100);
+
+    };
+
     render() {
         return (
             <Modal show={this.state.showModal}
                    onHide={this.closeModal}
                    autoFocus
-                   bsSize='large' >
+                   bsSize='large'
+                   onEnter={this.handleEnter}
+            >
 
                 <Modal.Header closeModalButton closeButton >
                     <Modal.Title>{this.props.name}</Modal.Title>
@@ -30,7 +42,11 @@ export default class ModalWindow extends React.Component {
                 <Modal.Body >
 
                         <ResponsiveEmbed a16by9>
-                            <embed src={`https://player.vimeo.com/video/${ this.props.videoId }?badge=0&autopause=0&player_id=0'&autoplay=true`} />
+                            <iframe src={`https://player.vimeo.com/video/${ this.props.videoId }?badge=0&autopause=0&player_id=0'&autoplay=true`}
+                                    frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen
+                                    ref='modalVideo'
+                                    onLoad={this.handleLoad}
+                            />
                         </ResponsiveEmbed>
 
                 </Modal.Body>
